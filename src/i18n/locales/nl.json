@@ -1,0 +1,15 @@
+{
+  "nav": {
+    "liveTiming": "Live Timing",
+    "schedule": "Race Weekend",
+    "calendar": "Kalender",
+    "standings": "Coureurs"
+  },
+  "hero": {
+    "tagline": "Live timing voor F1, MotoGP, Moto2 en Moto3 — elke sector, elke gap, elke ronde."
+  },
+  "status": {
+    "live": "SESSIE LIVE",
+    "offline": "Sessie offline"
+  }
+}

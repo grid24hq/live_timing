@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  /* Kleuren — zelfde tokens als het GRID24HQ HUD-ontwerp */
+  --color-void: #060708;
+  --color-panel: #101215;
+  --color-panel-raised: #17191d;
+  --color-line: #26292f;
+  --color-line-bright: #3a3e46;
+
+  --color-text-primary: #F2F3F5;
+  --color-text-secondary: #868C97;
+  --color-text-dim: #52565e;
+
+  --color-signal: #FF2D2D;
+  --color-amber: #FFB020;
+  --color-purple: #B026FF;
+  --color-green: #00D97E;
+
+  --color-f1: #E10600;
+  --color-motogp: #0046D5;
+  --color-moto2: #FF6B00;
+  --color-moto3: #00A651;
+
+  /* Typografie */
+  --font-display: "Rajdhani", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-body: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}

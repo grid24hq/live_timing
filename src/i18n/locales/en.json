@@ -1,0 +1,15 @@
+{
+  "nav": {
+    "liveTiming": "Live Timing",
+    "schedule": "Race Weekend",
+    "calendar": "Calendar",
+    "standings": "Drivers"
+  },
+  "hero": {
+    "tagline": "Live timing for F1, MotoGP, Moto2 and Moto3 — every sector, every gap, every lap."
+  },
+  "status": {
+    "live": "SESSION LIVE",
+    "offline": "Session offline"
+  }
+}
