@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { useTimingStore, type Series } from '../store/useTimingStore'
 import type { LiveSession } from '../types/timing'
 
@@ -80,9 +81,9 @@ export default function Home() {
             <a href="#timing" className="font-display text-sm font-semibold text-text-secondary hover:text-text-primary">
               {t('nav.liveTiming')}
             </a>
-            <a href="#calendar" className="font-display text-sm font-semibold text-text-secondary hover:text-text-primary">
+            <Link to="/calendar" className="font-display text-sm font-semibold text-text-secondary hover:text-text-primary">
               {t('nav.calendar')}
-            </a>
+            </Link>
             <a href="#standings" className="font-display text-sm font-semibold text-text-secondary hover:text-text-primary">
               {t('nav.standings')}
             </a>

@@ -33,3 +33,19 @@ body {
   color: var(--color-text-primary);
   font-family: var(--font-body);
 }
+
+@layer components {
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded px-2.5 py-0.5 text-xs font-body font-semibold uppercase tracking-wider;
+  }
+  .panel-card {
+    @apply relative overflow-hidden rounded-lg border border-line bg-panel;
+  }
+  .section-label {
+    @apply flex items-center gap-3 text-xs font-body font-semibold uppercase tracking-[3px] text-text-dim;
+  }
+  .section-label::before {
+    content: '';
+    @apply block h-0.5 w-6 flex-shrink-0 bg-amber;
+  }
+}
