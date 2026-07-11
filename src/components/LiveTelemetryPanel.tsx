@@ -246,7 +246,7 @@ export const LiveTelemetryPanel: React.FC<LiveTelemetryPanelProps> = ({ circuitS
       <div className="mt-4 flex items-center gap-1.5 border-t border-neutral-800/60 pt-3">
         <ShieldCheck className="h-3.5 w-3.5 flex-shrink-0 text-emerald-500/70" />
         <p className="font-body text-[10px] leading-relaxed text-neutral-500">
-          GRID24HQ Data Shield actief. Geen risico op pagina-crashes.
+          GRID24HQ Data Shield actief.
         </p>
       </div>
     </div>
