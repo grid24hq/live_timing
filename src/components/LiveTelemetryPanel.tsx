@@ -180,7 +180,7 @@ export const LiveTelemetryPanel: React.FC<LiveTelemetryPanelProps> = ({ circuitS
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5">
             <span className="font-mono text-lg font-black tracking-wide text-red-500">
-              #{selectedDriverId?.toUpperCase()}
+              #{selectedDriverId?.replace(/^#+/, '').toUpperCase()}
             </span>
           </div>
           <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-neutral-700 bg-black/50">

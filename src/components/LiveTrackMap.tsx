@@ -12,7 +12,7 @@ interface AllPositions {
   [carNumber: string]: Position
 }
 
-// Kalibratie-matrix voor F1-meters naar jouw SVG-box
+// Kalibratie-matrix voor F1-meters naar jouw box
 // Mocht een stip op een circuit iets te ver naar links of rechts rijden,
 // dan kun je hier simpel de min/max waarden een klein tikje aanpassen!
 const TRACK_BOUNDS: Record<string, { minX: number; maxX: number; minY: number; maxY: number }> = {
@@ -25,10 +25,10 @@ const TRACK_BOUNDS: Record<string, { minX: number; maxX: number; minY: number; m
   default: { minX: -1500, maxX: 1500, minY: -1500, maxY: 1500 }
 }
 
-// Jouw sync-scripts gebruiken soms de landnaam (bv. "belgium_gp") waar het
-// SVG-bestand een bijvoeglijk naamwoord gebruikt (bv. "f1_belgian_gp.svg").
-// Deze alias-lijst vangt dat verschil op zodat er nooit een leeg circuit
-// verschijnt, ongeacht welke schrijfwijze het Command Center aanlevert.
+// Jouw sync-scripts gebruiken soms de landnaam (bv. "belgium_gp") waar de
+// officiële benaming een bijvoeglijk naamwoord gebruikt (bv. "belgian_gp").
+// Deze alias-lijst vangt dat verschil op vóórdat we naar de telemetrie-
+// afbeelding zoeken.
 const CIRCUIT_ALIASES: Record<string, string> = {
   belgium_gp: 'belgian_gp',
   britain_gp: 'british_gp', great_britain_gp: 'british_gp', uk_gp: 'british_gp',
@@ -39,10 +39,42 @@ const CIRCUIT_ALIASES: Record<string, string> = {
   hungary_gp: 'hungarian_gp',
   austria_gp: 'austrian_gp',
   australia_gp: 'australian_gp',
-  brazil_gp: 'brazilian_gp',
+  brazil_gp: 'brazilian_gp', sao_paulo_gp: 'brazilian_gp',
   china_gp: 'chinese_gp',
   saudi_gp: 'saudi_arabian_gp', saudi_arabia_gp: 'saudi_arabian_gp',
   usa_gp: 'us_gp', united_states_gp: 'us_gp', austin_gp: 'us_gp',
+  mexican_gp: 'mexico_gp',
+}
+
+// De officiële 'circuit_slug' (zoals f1_ws_client.py 'm aanlevert, bv. "british_gp")
+// -> de bestandsnaam van de nieuwe telemetrie-afbeelding (public/circuits__telemetry/).
+// Dit zijn twee verschillende naamconventies (GP-naam vs. circuit-naam), vandaar
+// deze losse koppeltabel i.p.v. rechtstreeks de slug in het pad te plakken.
+const CIRCUIT_TELEMETRY_IMAGE: Record<string, string> = {
+  australian_gp: 'albert_park',
+  bahrain_gp: 'bahrain',
+  saudi_arabian_gp: 'jeddah',
+  japanese_gp: 'suzuka',
+  chinese_gp: 'shanghai',
+  miami_gp: 'miami',
+  madrid_gp: 'madrid',
+  monaco_gp: 'monaco',
+  spanish_gp: 'catalunya',
+  canadian_gp: 'montreal',
+  austrian_gp: 'red_bull_ring',
+  british_gp: 'silverstone',
+  belgian_gp: 'spa',
+  hungarian_gp: 'hungaroring',
+  dutch_gp: 'zandvoort',
+  italian_gp: 'monza',
+  azerbaijan_gp: 'baku',
+  singapore_gp: 'singapore',
+  us_gp: 'austin',
+  mexico_gp: 'mexico_city',
+  brazilian_gp: 'interlagos',
+  las_vegas_gp: 'las_vegas',
+  qatar_gp: 'losail',
+  abu_dhabi_gp: 'abu_dhabi',
 }
 
 interface LiveTrackMapProps {
@@ -88,7 +120,7 @@ export const LiveTrackMap: React.FC<LiveTrackMapProps> = ({ circuitSlug = 'briti
 
   if (selectedSeries !== 'f1') return null
 
-  // Landnaam -> bijvoeglijk-naamwoord normaliseren voordat we het bestand/de bounds opzoeken
+  // Landnaam -> bijvoeglijk-naamwoord normaliseren voordat we verder zoeken
   const normalizedSlug = CIRCUIT_ALIASES[circuitSlug] ?? circuitSlug
 
   // Zoek de juiste schaalinstellingen voor dit circuit
@@ -109,8 +141,10 @@ export const LiveTrackMap: React.FC<LiveTrackMapProps> = ({ circuitSlug = 'briti
     }
   }
 
-  // Genereer het exacte pad naar jouw public SVG-map
-  const svgPath = `/circuits/f1/f1_${normalizedSlug}.svg`
+  // GP-slug -> telemetrie-afbeelding-id. Onbekende slugs vallen terug op de
+  // slug zelf zonder '_gp' (bv. 'silverstone_gp' -> 'silverstone') als beste gok.
+  const imageId = CIRCUIT_TELEMETRY_IMAGE[normalizedSlug] ?? normalizedSlug.replace(/_gp$/, '')
+  const imagePath = `/circuits__telemetry/f1_${imageId}_telemetry.webp`
 
   return (
     <div className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4 shadow-2xl">
@@ -124,20 +158,20 @@ export const LiveTrackMap: React.FC<LiveTrackMapProps> = ({ circuitSlug = 'briti
       </div>
 
       {/* De relatieve box waarin alles wordt getekend */}
-      <div className="relative flex h-72 w-full items-center justify-center overflow-hidden rounded-lg border border-neutral-900/40 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)] p-4">
+      <div className="relative flex h-80 w-full items-center justify-center overflow-hidden rounded-lg border border-neutral-900/40 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)] p-4">
 
-        {/* JOUW RODE SVG ALS ACHTERGROND */}
+        {/* OFFICIËLE F1-CIRCUITAFBEELDING ALS ACHTERGROND */}
         <img
-          src={svgPath}
+          src={imagePath}
           alt="Circuit Map"
-          className="pointer-events-none absolute max-h-[85%] max-w-[85%] select-none object-contain opacity-60"
+          className="pointer-events-none absolute max-h-[93%] max-w-[93%] select-none object-contain opacity-80"
           onError={(e) => {
             // Als een bestand onverhoopt mist, toon dan een subtiele waarschuwing in plaats van een crash
             (e.target as HTMLImageElement).style.display = 'none'
           }}
         />
 
-        {/* DE LIVE AUTO STIPPEN OVER DE RODE LIJNEN */}
+        {/* DE LIVE AUTO STIPPEN OVER DE CIRCUITAFBEELDING */}
         {Object.entries(positions).map(([carNumber, pos]) => {
           const style = convertToPercentages(pos.x, pos.y)
           const dotColor = TEAM_COLORS[carNumber] || '#ef4444' // Standaard rood voor onbekende nummers

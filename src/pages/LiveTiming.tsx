@@ -54,7 +54,7 @@ export default function LiveTiming() {
   return (
     <div className="min-h-screen bg-void font-body text-text-primary">
       {/* LIVE TIMING */}
-      <section className="mx-auto max-w-[1180px] px-8 py-12">
+      <section className="mx-auto max-w-[1360px] px-8 py-12">
         <div className="overflow-hidden rounded-xl border border-line bg-panel">
           <div className="flex border-b border-line bg-panel-raised">
             {(Object.keys(SERIES_LABEL) as Series[]).map((series) => (
@@ -85,7 +85,7 @@ export default function LiveTiming() {
 
                 {/* HET SCHUIPANEEL: Wordt hiernaast geladen zodra openklapt */}
                 {isTelemetryOpen && (
-                  <div className="w-1/3 min-w-[340px] animate-fade-in">
+                  <div className="w-1/3 min-w-[420px] animate-fade-in">
                     <LiveTelemetryPanel circuitSlug={actieveSessie?.circuit_slug} />
                   </div>
                 )}
