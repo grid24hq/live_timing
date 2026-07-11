@@ -98,7 +98,7 @@ export default function LiveTiming() {
                   Er loopt nu geen {SERIES_LABEL[selectedSeries]}-sessie.
                 </p>
                 <p className="mt-1 font-body text-xs text-text-dim">
-                  Zodra het Command Center een sessie start, verschijnt de tabel hier automatisch.
+                  Zodra er een sessie start, verschijnt de tabel hier automatisch.
                 </p>
               </div>
             )}
