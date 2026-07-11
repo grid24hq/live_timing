@@ -21,6 +21,7 @@
   --color-motogp: #0046D5;
   --color-moto2: #FF6B00;
   --color-moto3: #00A651;
+  --color-worldsbk: #B026FF;
 
   /* Typografie */
   --font-display: "Rajdhani", sans-serif;
@@ -32,9 +33,45 @@ body {
   background-color: var(--color-void);
   color: var(--color-text-primary);
   font-family: var(--font-body);
+  /* Firefox: dunne, rechte scrollbar in de merkkleur */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-signal) var(--color-void);
+}
+
+/* Chromium/WebKit: dunne, rechte (niet-afgeronde) scrollbar in de merkkleur */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-signal);
+  border-radius: 0;
+  border: 2px solid var(--color-void);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ff5252;
 }
 
 @layer components {
+  @keyframes modalBackdropIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes modalPanelIn {
+    from { opacity: 0; transform: scale(0.96) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   .badge {
     @apply inline-flex items-center gap-1.5 rounded px-2.5 py-0.5 text-xs font-body font-semibold uppercase tracking-wider;
   }
@@ -47,5 +84,12 @@ body {
   .section-label::before {
     content: '';
     @apply block h-0.5 w-6 flex-shrink-0 bg-amber;
+  }
+  .no-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
   }
 }

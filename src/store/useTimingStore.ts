@@ -1,6 +1,7 @@
 import { create } from 'zustand'
+import type { Series } from '../types/timing'
 
-export type Series = 'f1' | 'motogp' | 'moto2' | 'moto3'
+export type { Series }
 
 interface TimingState {
   selectedSeries: Series

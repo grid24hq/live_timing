@@ -1,166 +1,172 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
-import { useTimingStore, type Series } from '../store/useTimingStore'
-import type { LiveSession } from '../types/timing'
-
-// Tijdelijke mock data — zelfde vorm als het echte Firebase RTDB pad.
-// Vervang dit later door een hook (bv. useLiveTiming) die op
-// MotoGP/2026/<gp>/Live_Timing/Algemeen_Sessie/ luistert.
-const MOCK_SESSIONS: Record<Series, LiveSession> = {
-  f1: {
-    series: 'f1',
-    sessionLabel: 'Race • Ronde 42/58 — Circuit Zandvoort',
-    isLive: true,
-    leaderboard: [
-      { pos: 1, name: 'M. Verstappen', team: 'Red Bull Racing', gap: 'Leider', lastLap: '1:11.203', sectors: ['purple', 'green', 'yellow'] },
-      { pos: 2, name: 'L. Norris', team: 'McLaren', gap: '+2.981', lastLap: '1:11.540', sectors: ['green', 'yellow', 'green'] },
-      { pos: 3, name: 'C. Leclerc', team: 'Ferrari', gap: '+6.114', lastLap: '1:11.902', sectors: ['yellow', 'yellow', 'green'] },
-    ],
-  },
-  motogp: {
-    series: 'motogp',
-    sessionLabel: 'Grand Prix • Ronde 18/26 — TT Circuit Assen',
-    isLive: true,
-    leaderboard: [
-      { pos: 1, name: 'F. Bagnaia', team: 'Ducati Lenovo', gap: 'Leider', lastLap: '1:33.104', sectors: ['purple', 'yellow', 'green'] },
-      { pos: 2, name: 'J. Martin', team: 'Pramac Racing', gap: '+0.812', lastLap: '1:33.221', sectors: ['green', 'green', 'yellow'] },
-    ],
-  },
-  moto2: {
-    series: 'moto2',
-    sessionLabel: 'Race — TT Circuit Assen',
-    isLive: false,
-    leaderboard: [
-      { pos: 1, name: 'T. Öncü', team: 'Red Bull KTM Ajo', gap: 'Leider', lastLap: '1:38.210', sectors: ['purple', 'green', 'green'] },
-    ],
-  },
-  moto3: {
-    series: 'moto3',
-    sessionLabel: 'Race — TT Circuit Assen',
-    isLive: false,
-    leaderboard: [
-      { pos: 1, name: 'D. Holgado', team: 'Red Bull KTM Ajo', gap: 'Leider', lastLap: '1:43.552', sectors: ['purple', 'yellow', 'green'] },
-    ],
-  },
-}
-
-const SERIES_LABEL: Record<Series, string> = {
-  f1: 'FORMULA 1',
-  motogp: 'MOTOGP',
-  moto2: 'MOTO2',
-  moto3: 'MOTO3',
-}
-
-const SERIES_ACCENT: Record<Series, string> = {
-  f1: 'border-f1 text-f1',
-  motogp: 'border-motogp text-motogp',
-  moto2: 'border-moto2 text-moto2',
-  moto3: 'border-moto3 text-moto3',
-}
-
-const SECTOR_COLOR: Record<string, string> = {
-  purple: 'text-purple',
-  green: 'text-green',
-  yellow: 'text-amber',
-}
+import { Link, useNavigate } from 'react-router-dom'
+import Clock from '../components/Clock'
+import { Timer, Calendar, Users, ArrowUpRight } from 'lucide-react'
+import { getKalender, getRaceStatus } from '../lib/kalenderApi'
+import type { KalenderRace } from '../types/calendar'
+import RaceCard from '../components/RaceCard'
 
 export default function Home() {
   const { t } = useTranslation()
-  const { selectedSeries, setSelectedSeries } = useTimingStore()
-  const session = MOCK_SESSIONS[selectedSeries]
+  const navigate = useNavigate()
+  const isSessionLive = false
+
+  const [volgendeRaces, setVolgendeRaces] = useState<KalenderRace[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+    getKalender()
+      .then((maanden) => {
+        if (cancelled) return
+        const alleRaces = maanden.flatMap((m) => m.races)
+        const upcoming = alleRaces.filter((r) => getRaceStatus(r.datum) !== 'finished')
+        setVolgendeRaces(upcoming.slice(0, 3))
+      })
+      .catch(() => {
+        if (!cancelled) setVolgendeRaces([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
-    <div className="min-h-screen bg-void text-text-primary font-body">
-      {/* NAV */}
-      <nav className="sticky top-0 z-50 border-b border-line bg-void/85 backdrop-blur">
-        <div className="mx-auto flex h-[68px] max-w-[1180px] items-center justify-between px-8">
-          <div className="font-display text-xl font-bold tracking-wide">
-            GRID24<span className="text-signal">HQ</span>
+    <main className="min-h-[calc(100vh-64px)] lg:h-[calc(100vh-64px)] lg:flex lg:flex-col bg-[#060709] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-950/10 via-[#060709] to-[#040507] text-gray-250 px-6 py-5 md:px-12 select-none w-full overflow-y-auto">
+      
+      {/* 1. Top Header - compacter */}
+      <header className="w-full mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-900/60 pb-3">
+        <div>
+          <h1 className="text-xl md:text-3xl font-black font-mono tracking-wider text-white">
+            GRID<span className="text-red-500">24</span>HQ
+          </h1>
+          <p className="text-sm md:text-base text-gray-400 mt-1 font-medium">
+            {t('home.subtitle', 'Live motorsport timing center — every sector, every gap, every lap.')}
+          </p>
+        </div>
+        
+         {/* Status & Klok */}
+        <div className="flex items-center gap-5 bg-[#0b0d13]/60 backdrop-blur-md border border-gray-900 px-4 py-2.5 rounded-2xl flex-shrink-0">
+          <div className="flex items-center gap-3 border-r border-gray-800 pr-6">
+            <span className={`w-3 h-3 rounded-full ${isSessionLive ? 'bg-red-500 animate-pulse' : 'bg-gray-600'}`} />
+            <span className="text-xs font-mono font-bold tracking-wider text-gray-400 uppercase">
+              {isSessionLive ? 'LIVE' : 'STANDBY'}
+            </span>
           </div>
-          <div className="hidden gap-7 md:flex">
-            <a href="#timing" className="font-display text-sm font-semibold text-text-secondary hover:text-text-primary">
-              {t('nav.liveTiming')}
-            </a>
-            <Link to="/calendar" className="font-display text-sm font-semibold text-text-secondary hover:text-text-primary">
-              {t('nav.calendar')}
-            </Link>
-            <a href="#standings" className="font-display text-sm font-semibold text-text-secondary hover:text-text-primary">
-              {t('nav.standings')}
-            </a>
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-line-bright px-3.5 py-1.5 font-mono text-xs text-text-secondary">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal" />
-            {t('status.live')}
+          <div className="flex items-center gap-4 text-right">
+            <div>
+              <span className="block text-[10px] font-bold font-mono tracking-widest text-gray-500 uppercase mb-0.5">TRACK TIME</span>
+              <span className="text-xl font-black font-mono tracking-wider text-white block tabular-nums">
+                {new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            </div>
+            <div className="w-9 h-9 flex items-center justify-center overflow-hidden bg-black/20 rounded-full border border-gray-950 p-1">
+              <Clock size="sm" />
+            </div>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* HERO */}
-      <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 py-16 text-center">
-        <h1 className="font-display text-6xl font-bold tracking-wide md:text-8xl">
-          GRID24<span className="text-signal">HQ</span>
-        </h1>
-        <p className="mt-5 max-w-lg text-text-secondary">{t('hero.tagline')}</p>
-      </section>
+      {/* 2. Het Dashboard Grid */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4">
+        
+       {/* LINKER BLOK (Live Timing Center) */}
+        <section className="lg:col-span-2 bg-[#0b0d13]/50 backdrop-blur-md border border-gray-950 rounded-2xl p-5 shadow-2xl flex flex-col justify-between min-h-[250px] relative overflow-hidden group">
+          <div className="absolute -right-24 -top-24 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+          
+          <div>
+            <div className="flex items-center mb-3">
+              <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl">
+                <Timer className="w-6 h-6" />
+              </div>
+            </div>
+            
+            <h2 className="text-lg md:text-2xl font-bold text-white tracking-wide uppercase mb-2">Live Timing Center</h2>
+            <p className="text-sm md:text-base text-gray-400 leading-relaxed max-w-3xl">
+              Open het hoofdtelemetriescherm om racesessies van de Formule 1, MotoGP en WorldSBK live te volgen met real-time sector- en tussentijden rechtstreeks vanaf de circuits.
+            </p>
+          </div>
 
-      {/* LIVE TIMING CONSOLE */}
-      <section id="timing" className="mx-auto max-w-[1180px] px-8 py-12">
-        <div className="overflow-hidden rounded-xl border border-line bg-panel">
-          <div className="flex border-b border-line bg-panel-raised">
-            {(Object.keys(SERIES_LABEL) as Series[]).map((series) => (
-              <button
-                key={series}
-                onClick={() => setSelectedSeries(series)}
-                className={`border-b-2 px-6 py-4 font-display text-sm font-semibold tracking-wide ${
-                  selectedSeries === series ? SERIES_ACCENT[series] : 'border-transparent text-text-secondary'
-                }`}
-              >
-                {SERIES_LABEL[series]}
-              </button>
+          <Link 
+            to="/live-timing"
+            className="mt-4 w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-3 bg-red-600 hover:bg-red-700 text-base font-bold text-white rounded-xl transition-all shadow-lg shadow-red-950/50 active:scale-98"
+          >
+            Launch Live Timing
+            <ArrowUpRight className="w-5 h-5" />
+          </Link>
+        </section>
+
+        {/* RECHTER KOLOM (Snelkoppelingen) */}
+        <section className="flex flex-col gap-4">
+          
+          {/* Kalender Module */}
+          <Link 
+            to="/calendar"
+            className="bg-[#0b0d13]/50 backdrop-blur-md border border-gray-950 hover:border-orange-500/20 rounded-2xl p-5 shadow-xl flex flex-col justify-between h-1/2 group transition-all duration-300 min-h-[115px]"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="p-2.5 bg-orange-500/10 text-orange-400 rounded-xl border border-orange-500/10 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
+                <Calendar className="w-5 h-5" />
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white uppercase tracking-wide mb-1">Race Kalender</h3>
+              <p className="text-sm text-gray-400 leading-relaxed">Bekijk volledige tijdschema's, circuits en sessietijden van het 2026 seizoen.</p>
+            </div>
+          </Link>
+
+          {/* Coureurs Module */}
+          <Link 
+            to="/standen"
+            className="bg-[#0b0d13]/50 backdrop-blur-md border border-gray-950 hover:border-purple-500/20 rounded-2xl p-5 shadow-xl flex flex-col justify-between h-1/2 group transition-all duration-300 min-h-[115px]"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/10 group-hover:bg-purple-500 group-hover:text-white transition-colors duration-300">
+                <Users className="w-5 h-5" />
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white uppercase tracking-wide mb-1">Coureurs & Standen</h3>
+              <p className="text-sm text-gray-400 leading-relaxed">Analyseer coureurspaspoorten, biografieën en kampioenschapsstatistieken.</p>
+            </div>
+          </Link>
+
+        </section>
+
+      </div>
+
+      {/* 3. Eerstvolgende races */}
+      {volgendeRaces.length > 0 && (
+        <div className="w-full mt-4">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-base md:text-lg font-bold text-white uppercase tracking-wide">Eerstvolgende Races</h2>
+            <Link
+              to="/calendar"
+              className="text-xs font-mono font-bold uppercase tracking-wider text-gray-500 hover:text-white transition-colors flex items-center gap-1"
+            >
+              Volledige kalender
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {volgendeRaces.map((race) => (
+              <RaceCard key={`${race.serie}-${race.id}`} race={race} onClick={() => navigate('/calendar')} />
             ))}
           </div>
-
-          <div className="flex items-center justify-between border-b border-line px-6 py-4 font-mono text-sm text-text-secondary">
-            <span>{session.sessionLabel}</span>
-            {session.isLive && (
-              <span className="flex items-center gap-2 text-signal">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal" />
-                LIVE
-              </span>
-            )}
-          </div>
-
-          <table className="w-full font-mono text-sm">
-            <thead>
-              <tr className="border-b border-line text-left text-xs uppercase tracking-wide text-text-dim">
-                <th className="px-5 py-3">Pos</th>
-                <th className="px-5 py-3">Coureur</th>
-                <th className="px-5 py-3">Gap</th>
-                <th className="px-5 py-3">Laatste ronde</th>
-                <th className="px-5 py-3">S1</th>
-                <th className="px-5 py-3">S2</th>
-                <th className="px-5 py-3">S3</th>
-              </tr>
-            </thead>
-            <tbody>
-              {session.leaderboard.map((row) => (
-                <tr key={row.pos} className="border-b border-line hover:bg-white/[0.02]">
-                  <td className="px-5 py-3.5 font-bold">{row.pos}</td>
-                  <td className="px-5 py-3.5 font-body">
-                    <div className="font-semibold">{row.name}</div>
-                    <div className="text-xs text-text-dim">{row.team}</div>
-                  </td>
-                  <td className="px-5 py-3.5 text-text-secondary">{row.gap}</td>
-                  <td className="px-5 py-3.5">{row.lastLap}</td>
-                  {row.sectors.map((s, i) => (
-                    <td key={i} className={`px-5 py-3.5 ${SECTOR_COLOR[s]}`}>■</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
-      </section>
-    </div>
+      )}
+
+      {/* 4. Footer */}
+      <footer className="w-full mt-4 pt-3 border-t border-gray-900/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span className="font-mono text-xs tracking-wider text-gray-600">
+          GRID<span className="text-red-500">24</span>HQ &copy; {new Date().getFullYear()} — Live motorsport timing center
+        </span>
+        <span className="font-mono text-[11px] uppercase tracking-widest text-gray-700">
+          F1 · MotoGP · WorldSBK — Seizoen 2026
+        </span>
+      </footer>
+    </main>
   )
 }

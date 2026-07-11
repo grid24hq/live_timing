@@ -1,6 +1,6 @@
-# GRID24HQ — Live Timing
+# GRID24HQ — Live Timing.
 
-Live timing platform voor F1, MotoGP, Moto2 en Moto3.
+Live timing platform voor F1, MotoGP, Moto2, Moto3 en SBK
 
 ## Stack
 - React 18 + Vite + TypeScript
