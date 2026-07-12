@@ -73,6 +73,108 @@ const F1_TEAM_CARS: Record<string, string> = {
   'rb': 'rb.webp', 'rb f1 team': 'rb.webp', 'racing bulls': 'rb.webp', 'audi': 'audi.webp', 'cadillac': 'cadillac.webp',
 }
 
+// ── Moto2 ────────────────────────────────────────────────────────────────
+// Coureur -> bestandsnaam-slug. De sleutel is de 'natuurlijke' naam (spaties),
+// de waarde de exacte bestandsnaam-basis (koppeltekens) zoals die in public/ staat.
+// 'mario aji' EN 'mario suryo aji' wijzen bewust allebei naar hetzelfde bestand —
+// de teamlijst en de bestandsnaam gebruiken net een andere schrijfwijze.
+const MOTO2_NAME_TO_SLUG: Record<string, string> = {
+  'izan guevara': 'izan-guevara', 'alberto ferrandez': 'alberto-ferrandez',
+  'david alonso': 'david-alonso', 'daniel holgado': 'daniel-holgado',
+  'aron canet': 'aron-canet', 'deniz oncu': 'deniz-oncu',
+  'celestino vietti': 'celestino-vietti', 'luca lunetta': 'luca-lunetta',
+  'jorge navarro': 'jorge-navarro', 'alex escrig': 'alex-escrig',
+  'taiyo furusato': 'taiyo-furusato', 'mario aji': 'mario-suryo-aji', 'mario suryo aji': 'mario-suryo-aji',
+  'sergio garcia': 'sergio-garcia', 'alonso lopez': 'alonso-lopez',
+  'adrian huertas': 'adrian-huertas', 'daniel munoz': 'daniel-munoz',
+  'manuel gonzalez': 'manuel-gonzalez', 'senna agius': 'senna-agius',
+  'joe roberts': 'joe-roberts', 'filip salac': 'filip-salac',
+  'ivan ortola': 'ivan-ortola', 'angel piqueras': 'angel-piqueras',
+  'collin veijer': 'collin-veijer', 'jose antonio rueda': 'jose-antonio-rueda',
+  'tony arbolino': 'tony-arbolino', 'barry baltus': 'barry-baltus',
+  'zonta van den goorbergh': 'zonta-van-den-goorbergh', 'ayumu sasaki': 'ayumu-sasaki',
+  'zonta vd goorbergh': 'zonta-van-den-goorbergh',
+  'xabi zurutuza': 'xabi-zurutuza',
+}
+// Slugs met een staande (200x300) foto — favoriet, want consistent met MotoGP/SBK
+const MOTO2_STANDING_AVAILABLE = new Set([
+  'alberto-ferrandez', 'alonso-lopez', 'angel-piqueras', 'aron-canet', 'ayumu-sasaki',
+  'barry-baltus', 'celestino-vietti', 'collin-veijer', 'daniel-holgado', 'david-alonso',
+  'deniz-oncu', 'filip-salac', 'ivan-ortola', 'izan-guevara', 'joe-roberts', 'jorge-navarro',
+  'jose-antonio-rueda', 'luca-lunetta', 'manuel-gonzalez', 'mario-suryo-aji', 'senna-agius',
+  'sergio-garcia', 'taiyo-furusato', 'tony-arbolino', 'zonta-van-den-goorbergh',
+  'xabi-zurutuza', 'daniel-munoz', 'alex-escrig', 'adrian-huertas',
+])
+// Slugs met een halve (900x700) foto — fallback voor de 3 coureurs zonder staande foto
+const MOTO2_HALFBODY_AVAILABLE = new Set([
+  'adrian-huertas', 'alberto-ferrandez', 'alex-escrig', 'alonso-lopez', 'angel-piqueras',
+  'aron-canet', 'ayumu-sasaki', 'barry-baltus', 'celestino-vietti', 'collin-veijer',
+  'daniel-holgado', 'daniel-munoz', 'david-alonso', 'deniz-oncu', 'filip-salac', 'ivan-ortola',
+  'izan-guevara', 'joe-roberts', 'jose-antonio-rueda', 'luca-lunetta', 'manuel-gonzalez',
+  'mario-suryo-aji', 'senna-agius', 'sergio-garcia', 'taiyo-furusato', 'tony-arbolino',
+  'zonta-van-den-goorbergh',
+])
+// Team -> motorfoto. Slechts 14 foto's voor 28 coureurs (1 per team, voorkant met
+// rugnummer) — exact zoals MotoGP.com dit zelf ook doet voor teamgenoten.
+const MOTO2_TEAM_BIKES: Record<string, string> = {
+  'blu cru pramac yamaha moto2': '28-M2-Izan-Guevara-Bike.webp', 'blu cru pramac yamaha': '28-M2-Izan-Guevara-Bike.webp',
+  'cfmoto aspar team': '80-M2-David-Alonso-Bike.webp', 'aspar team': '80-M2-David-Alonso-Bike.webp',
+  'cfmoto azul marino aspar team': '80-M2-David-Alonso-Bike.webp',
+  'elf marc vds racing team': '44-M2-Aron-Canet-Bike.webp', 'marc vds': '44-M2-Aron-Canet-Bike.webp',
+  'speedrs team': '13-M2-Celestino-Vietti-Bike.webp', 'hdr speedrs team': '13-M2-Celestino-Vietti-Bike.webp',
+  'klint racing team': '09-M2-Jorge-Navarro-Bike.webp',
+  'idemitsu honda team asia': '72-M2-Taiyo-Furusato-Bike.webp', 'honda team asia': '72-M2-Taiyo-Furusato-Bike.webp',
+  'italjet gresini moto2': '21-M2-Alonso-Lopez-Bike.webp', 'gresini racing moto2': '21-M2-Alonso-Lopez-Bike.webp',
+  'italtrans racing team': '99-M2-Adrian-Huertas-Bike.webp',
+  'liqui moly dynavolt intact gp': '18-M2-Manuel-Gonzalez-Bike.webp', 'intact gp': '18-M2-Manuel-Gonzalez-Bike.webp',
+  'onlyfans american racing team': '12-M2-Filip-Salac-Bike.webp', 'american racing team': '12-M2-Filip-Salac-Bike.webp',
+  'qjmotor - msi': '04-M2-Ivan-Ortola-Bike.webp', 'qjmotor msi': '04-M2-Ivan-Ortola-Bike.webp',
+  'qj motor - galfer - msi': '04-M2-Ivan-Ortola-Bike.webp', 'qj motor galfer msi': '04-M2-Ivan-Ortola-Bike.webp',
+  'qjmotor - xeramic - msi': '04-M2-Ivan-Ortola-Bike.webp', 'qjmotor xeramic msi': '04-M2-Ivan-Ortola-Bike.webp',
+  'red bull ktm ajo': '95-M2-Collin-Veijer-Bike.webp', 'ktm ajo': '95-M2-Collin-Veijer-Bike.webp',
+  'reds fantic racing': '07-M2-Barry-Baltus-Bike.webp', 'fantic racing': '07-M2-Barry-Baltus-Bike.webp',
+  'momoven idrofoglia rw racing team': '71-M2-Ayumu-Sasaki-Bike.webp', 'rw racing team': '71-M2-Ayumu-Sasaki-Bike.webp',
+}
+
+// ── Moto3 ────────────────────────────────────────────────────────────────
+// Coureur -> bestandsnaam-slug. Alle 26 coureurs staan in coureurs_staand
+// (geen aparte halve-foto-map zoals bij Moto2), dus geen terugval nodig.
+// Namen met een apostrof (O'Shea, O'Gorman) krijgen bewust een paar extra
+// schrijfwijzen mee, want Firebase/Dorna is daar wisselvallig in.
+const MOTO3_NAME_TO_SLUG: Record<string, string> = {
+  'ryusei yamanaka': 'ryusei-yamanaka', 'hakim danish': 'hakim-danish',
+  'maximo quiles': 'maximo-quiles', 'marco morelli': 'marco-morelli',
+  'adrian cruces': 'adrian-cruces', 'scott ogden': 'scott-ogden',
+  'cormac buchanan': 'cormac-buchanan', 'ruche moodley': 'ruche-moodley',
+  'eddie o shea': 'eddie-o-shea', "eddie o'shea": 'eddie-o-shea', 'eddie oshea': 'eddie-o-shea',
+  'joel kelso': 'joel-kelso',
+  'veda pratama': 'veda-pratama', 'zen mitani': 'zen-mitani',
+  'adrian fernandez': 'adrian-fernandez', 'guido pini': 'guido-pini',
+  'matteo bertelle': 'matteo-bertelle', 'joel esteban': 'joel-esteban',
+  'david almansa': 'david-almansa', 'david munoz': 'david-munoz',
+  'brian uriarte': 'brian-uriarte', 'alvaro carpe': 'alvaro-carpe',
+  'rico salmela': 'rico-salmela', 'valentin perrone': 'valentin-perrone',
+  'nicola carraro': 'nicola-carraro', 'jesus rios': 'jesus-rios',
+  'leo rammerstorfer': 'leo-rammerstorfer',
+  'casey o gorman': 'casey-o-gorman', "casey o'gorman": 'casey-o-gorman', 'casey ogorman': 'casey-o-gorman',
+}
+// Bikes zijn hier per team benoemd (niet per rijder zoals bij Moto2) — simpeler koppelen.
+const MOTO3_TEAM_BIKES: Record<string, string> = {
+  'aeon credit - mt helmets - msi': 'aeon-credit-mt-helmets-msi.webp', 'aeon credit mt helmets msi': 'aeon-credit-mt-helmets-msi.webp',
+  'cfmoto gaviota aspar team': 'cfmoto-gaviota-aspar-team.webp', 'gaviota aspar team': 'cfmoto-gaviota-aspar-team.webp',
+  'cip green power': 'cip-green-power.webp',
+  'code motorsports': 'code-motorsports.webp',
+  'gryd racing': 'gryd-racing.webp',
+  'honda team asia': 'honda-team-asia.webp',
+  'leopard racing': 'leopard-racing.webp',
+  'level up - mta': 'level-up-mta.webp', 'level up mta': 'level-up-mta.webp',
+  'liqui moly dynavolt intact gp': 'liqui-moly-dynavolt-intact-gp.webp', 'intact gp': 'liqui-moly-dynavolt-intact-gp.webp',
+  'red bull ktm ajo': 'red-bull-ktm-ajo.webp', 'ktm ajo': 'red-bull-ktm-ajo.webp',
+  'red bull ktm tech3': 'red-bull-ktm-tech3.webp', 'ktm tech3': 'red-bull-ktm-tech3.webp',
+  'rivacold snipers team': 'rivacold-snipers-team.webp', 'snipers team': 'rivacold-snipers-team.webp',
+  'sic58 squadra corse': 'sic58-squadra-corse.webp',
+}
+
 const FALLBACK_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"/>'
 
 /** Haalt accenten weg (Viñales -> Vinales) zodat naam-matching niet struikelt over diakritische tekens. */
@@ -96,6 +198,18 @@ function getDriverPhotoUrl(driver: DriverStanding | null, series: Series): strin
     return `/moto_gp/coureurs_staand/${file}`
   }
 
+  if (series === 'moto2') {
+    const slug = MOTO2_NAME_TO_SLUG[cleanName]
+    if (slug && MOTO2_STANDING_AVAILABLE.has(slug)) return `/moto_2/coureurs_staand/${slug}.webp`
+    if (slug && MOTO2_HALFBODY_AVAILABLE.has(slug)) return `/moto_2/coureurs/${slug}.webp`
+    return FALLBACK_IMG
+  }
+
+  if (series === 'moto3') {
+    const slug = MOTO3_NAME_TO_SLUG[cleanName]
+    return slug ? `/moto_3/coureurs_staand/${slug}.webp` : FALLBACK_IMG
+  }
+
   if (series === 'sbk') {
     return `/sbk/coureurs/${toSbkFileName(cleanName) || SBK_FALLBACK_DRIVER}.webp`
   }
@@ -112,11 +226,25 @@ function getTeamMachineUrl(driver: DriverStanding | null, series: Series): strin
     return `/sbk/bikes/${toSbkFileName(driver.naam) || SBK_FALLBACK_DRIVER}_bike_side.webp`
   }
 
-  if (series === 'motogp' || series === 'moto2' || series === 'moto3') {
+  if (series === 'motogp') {
     if (!driver?.naam) return FALLBACK_IMG
     const cleanName = stripAccents(driver.naam.toLowerCase().trim())
     const file = MOTOGP_RIDER_BIKES[cleanName] ?? 'ducati_lenovo_side.webp'
     return `/moto_gp/bikes/${file}`
+  }
+
+  if (series === 'moto2') {
+    if (!driver?.team) return FALLBACK_IMG
+    const teamKey = driver.team.toLowerCase().trim()
+    const file = MOTO2_TEAM_BIKES[teamKey]
+    return file ? `/moto_2/bikes/${file}` : FALLBACK_IMG
+  }
+
+  if (series === 'moto3') {
+    if (!driver?.team) return FALLBACK_IMG
+    const teamKey = driver.team.toLowerCase().trim()
+    const file = MOTO3_TEAM_BIKES[teamKey]
+    return file ? `/moto_3/bikes/${file}` : FALLBACK_IMG
   }
 
   if (!driver?.team) return FALLBACK_IMG
@@ -184,10 +312,27 @@ export default function Standen() {
         // De bron-API (Dorna/PulseLive) mengt soms losse wildcard-/testrijders
         // door de seizoensstand heen. Die staan altijd onderaan (laagste
         // punten), dus we knippen op het echte aantal vaste grid-coureurs.
-        const GRID_GROOTTE: Partial<Record<Series, number>> = { motogp: 22 }
-        const maxRiders = GRID_GROOTTE[selectedSeries]
-        if (maxRiders) {
-          cleanData = [...cleanData].sort((a, b) => (a.positie ?? 999) - (b.positie ?? 999)).slice(0, maxRiders)
+        // MotoGP: wildcard-rijders staan doorgaans onderaan, dus afkappen op
+        // positie werkt daar prima. Moto2 bleek dat niet waterdicht (een
+        // wildcard kan een vaste rijder met weinig punten voorbijstreven),
+        // dus daar filteren we expliciet op de bekende 28 namen i.p.v. te
+        // vertrouwen op de positie in de stand.
+        if (selectedSeries === 'moto2') {
+          cleanData = cleanData.filter((r) => {
+            const naam = stripAccents(r.naam.toLowerCase().trim())
+            return naam in MOTO2_NAME_TO_SLUG
+          })
+        } else if (selectedSeries === 'moto3') {
+          cleanData = cleanData.filter((r) => {
+            const naam = stripAccents(r.naam.toLowerCase().trim())
+            return naam in MOTO3_NAME_TO_SLUG
+          })
+        } else {
+          const GRID_GROOTTE: Partial<Record<Series, number>> = { motogp: 22 }
+          const maxRiders = GRID_GROOTTE[selectedSeries]
+          if (maxRiders) {
+            cleanData = [...cleanData].sort((a, b) => (a.positie ?? 999) - (b.positie ?? 999)).slice(0, maxRiders)
+          }
         }
 
         setStandings(cleanData)
