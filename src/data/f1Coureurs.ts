@@ -37,7 +37,7 @@ export const F1_COUREURS: F1Coureur[] = [
     carModel: 'SF-26', engine: 'Ferrari', chassis: 'SF-26', tires: 'Pirelli',
     carDescription: 'De SF-26 is Ferraris bolide voor 2026, gebouwd rond een herontworpen chassis en een sterke hybride motor.' },
   { id: 'norris', name: 'Lando Norris', team: 'McLaren Mastercard F1 Team', series: 'f1', photo: f1Base('norris'), carImage: f1Car('mclaren'),
-    number: 4, countryCode: 'gb', birthDate: '13 nov. 1999', age: 26, birthPlace: 'Bristol, Engeland', height: '1.75 m', debut: '2019, Australië', worldTitles: 0,
+    number: 4, countryCode: 'gb', birthDate: '13 nov. 1999', age: 26, birthPlace: 'Bristol, Engeland', height: '1.75 m', debut: '2019, Australië', worldTitles: 1,
     carModel: 'MCL40', engine: 'Mercedes', chassis: 'MCL40', tires: 'Pirelli',
     carDescription: 'De MCL40 is McLarens bolide voor het 2026-seizoen. Met een vernieuwd aerodynamisch pakket en Mercedes power unit.' },
   { id: 'piastri', name: 'Oscar Piastri', team: 'McLaren Mastercard F1 Team', series: 'f1', photo: f1Base('piastri'), carImage: f1Car('mclaren'),
