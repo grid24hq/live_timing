@@ -26,7 +26,7 @@ export default function MotoCircuitCard({ circuit, accentKleur }: Props) {
           onError={(e) => { e.currentTarget.style.opacity = '0' }}
         />
 
-        <div className="absolute right-3 top-3 h-6 w-9 overflow-hidden rounded-md border border-white/15 shadow backdrop-blur-sm">
+        <div className="absolute right-3 top-3 h-6 w-9 overflow-hidden rounded-md border border-white/15 shadow">
           <img
             src={flagSrc(circuit.countryCode)}
             alt={circuit.countryCode}
