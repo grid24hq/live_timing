@@ -19,7 +19,7 @@ export default function CircuitCard({ circuit }: Props) {
         />
 
         {/* Vlag rechtsboven — donker chipje zodat het altijd contrasteert, ook tegen lichte tekeningen */}
-        <div className="absolute right-3 top-3 h-6 w-9 overflow-hidden rounded-md border border-white/15 shadow">
+        <div className="absolute right-3 top-3 h-6 w-9 overflow-hidden rounded-md border border-white/15 shadow backdrop-blur-sm">
           <img
             src={flagSrc(circuit.countryCode)}
             alt={circuit.countryCode}
