@@ -30,7 +30,16 @@ const SERIES_ROW_ACCENT: Record<Series, string> = {
   motogp: 'bg-white/[0.025] border-l-2 border-[#FF5F1F]',
   moto2: 'bg-white/[0.025] border-l-2 border-[#CCFF00]',
   moto3: 'bg-white/[0.025] border-l-2 border-[#39FF14]',
-  sbk: 'bg-white/[0.025] border-l-2 border-[#EF4444]',
+  sbk: 'bg-white/[0.025] border-l-2 border-[#B026FF]',
+}
+
+// Zelfde kleuren, maar dan voor de onderrand van de actieve tab bovenin.
+const SERIES_TAB_ACCENT: Record<Series, string> = {
+  f1: 'text-white border-b-2 border-[#EF4444]',
+  motogp: 'text-white border-b-2 border-[#FF5F1F]',
+  moto2: 'text-white border-b-2 border-[#CCFF00]',
+  moto3: 'text-white border-b-2 border-[#39FF14]',
+  sbk: 'text-white border-b-2 border-[#B026FF]',
 }
 
 // ---------------------------------------------------------------------------
@@ -377,7 +386,7 @@ export default function Standen() {
             key={series}
             onClick={() => setSelectedSeries(series)}
             className={`px-6 py-4 font-mono text-xs font-bold tracking-widest transition-all relative uppercase whitespace-nowrap
-              ${selectedSeries === series ? 'text-white border-b-2 border-red-500' : 'text-gray-500 hover:text-gray-300'}
+              ${selectedSeries === series ? SERIES_TAB_ACCENT[series] : 'text-gray-500 hover:text-gray-300'}
             `}
           >
             {SERIES_LABEL[series]}
