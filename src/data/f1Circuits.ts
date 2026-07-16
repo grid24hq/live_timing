@@ -144,7 +144,7 @@ export const F1_CIRCUITS: F1Circuit[] = [
     kortenaam: 'Catalunya',
     stad: 'Montmeló, Barcelona',
     land: 'Spanje',
-    countryCode: 'es',
+    countryCode: 'es-ct',
     lengte_km: 4.657,
     bochten: 14,
     eerste_gp: 1991,

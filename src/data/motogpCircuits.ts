@@ -117,7 +117,7 @@ export const MOTOGP_CIRCUITS: MotoCircuit[] = [
     id: 'catalunya',
     naam: 'Circuit de Barcelona-Catalunya',
     land: 'Catalonië, Spanje',
-    countryCode: 'es',
+    countryCode: 'es-ct',
     lengte_km: 4.657,
     bochten: 14,
     eerste_gp: 1992,

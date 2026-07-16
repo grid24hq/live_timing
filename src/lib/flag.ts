@@ -1,10 +1,8 @@
-// Zet een ISO 3166-1 alpha-2 landcode (bv "nl") om in een vlagemoji (🇳🇱).
-// Zo hebben we geen losse vlag-afbeeldingen nodig in public/.
-export function flagEmoji(countryCode?: string): string {
-  if (!countryCode || countryCode.length !== 2) return ''
-  const code = countryCode.toUpperCase()
-  const A = 0x1f1e6 // regional indicator "A"
-  const chars = [...code].map((c) => A + (c.charCodeAt(0) - 65))
-  if (chars.some((c) => c < A || c > A + 25)) return ''
-  return String.fromCodePoint(...chars)
+// Zet een landcode (bv "nl", of een regio-variant zoals "es-ct" voor Catalonië,
+// "gb-sct" voor Schotland) om in het pad naar de bijbehorende vlag-afbeelding
+// in public/vlaggen. De afbeeldingen zijn ronde vlag-iconen van 512x512px (webp).
+export function flagSrc(countryCode?: string): string | undefined {
+  if (!countryCode) return undefined
+  const code = countryCode.toLowerCase()
+  return `/vlaggen/${code}.webp`
 }

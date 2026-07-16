@@ -20,19 +20,6 @@ const SERIES_LABEL: Record<Series, string> = {
   sbk: 'WORLDSBK',
 }
 
-// Zelfde accentkleuren als bij de circuit-kaarten: F1 rood, MotoGP oranje,
-// Moto2 geel, Moto3 groen, WorldSBK blijft rood (nog geen aparte kleur gevraagd).
-// Bewust als complete, letterlijke Tailwind-classnamen (i.p.v. inline style),
-// exact dezelfde opbouw als de eerder goedgekeurde F1-stijl (border-l-2 + border-kleur
-// samen in dezelfde conditie), zodat het renderresultaat identiek blijft.
-const SERIES_ROW_ACCENT: Record<Series, string> = {
-  f1: 'bg-white/[0.025] border-l-2 border-[#EF4444]',
-  motogp: 'bg-white/[0.025] border-l-2 border-[#FF5F1F]',
-  moto2: 'bg-white/[0.025] border-l-2 border-[#CCFF00]',
-  moto3: 'bg-white/[0.025] border-l-2 border-[#39FF14]',
-  sbk: 'bg-white/[0.025] border-l-2 border-[#EF4444]',
-}
-
 // ---------------------------------------------------------------------------
 // Asset mapping helpers
 // Los van de component gehouden zodat de JSX leesbaar blijft en er geen
@@ -395,6 +382,7 @@ export default function Standen() {
               <Trophy className="w-5 h-5 text-yellow-500" />
               {t('standings.title', 'Wereldkampioenschap Stand')}
             </h2>
+            <span className="text-[10px] font-mono font-bold text-gray-500">SEASON_2026_MATRIX</span>
           </div>
 
           {loading ? (
@@ -432,7 +420,7 @@ export default function Standen() {
                         key={driver.nummer ?? `${driver.naam}-${idx}`}
                         onClick={() => setSelectedDriver(driver)}
                         className={`group cursor-pointer transition-all duration-150 hover:bg-white/[0.015]
-                          ${selectedDriver?.naam === driver.naam ? SERIES_ROW_ACCENT[selectedSeries] : ''}
+                          ${selectedDriver?.naam === driver.naam ? 'bg-white/[0.025] border-l-2 border-red-500' : ''}
                         `}
                       >
                         <td className="px-6 py-4 font-mono font-black text-base tabular-nums text-gray-400 group-hover:text-white">
@@ -491,6 +479,9 @@ export default function Standen() {
                 </div>
 
                 <div className="text-center mt-4 z-20">
+                  <span className="inline-block text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-gray-900 text-gray-400 border border-gray-800 mb-2 tracking-widest">
+                    TELEMETRY_ID_{selectedDriver.nummer ?? '—'}
+                  </span>
                   <h3 className="text-xl font-black font-mono tracking-wide text-white uppercase">
                     {selectedDriver.naam}
                   </h3>

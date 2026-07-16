@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import type { Coureur } from '../types/coureur'
 import { SERIES_CONFIG } from '../lib/seriesConfig'
-import { flagEmoji } from '../lib/flag'
+
 
 type IconType = ComponentType<{ className?: string; style?: React.CSSProperties }>
 
@@ -297,11 +297,7 @@ export default function CoureurModal({ coureur, onClose }: Props) {
 
 function FlagIcon({ countryCode }: { countryCode?: string }) {
   const [error, setError] = useState(false)
-  if (!countryCode) return null
-  if (error) {
-    const emoji = flagEmoji(countryCode)
-    return emoji ? <span className="text-base leading-none">{emoji}</span> : null
-  }
+  if (!countryCode || error) return null
   return (
     <img
       src={`/vlaggen/${countryCode}.webp`}

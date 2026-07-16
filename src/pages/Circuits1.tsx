@@ -3,18 +3,16 @@ import { F1_CIRCUITS } from '../data/f1Circuits'
 import { MOTOGP_CIRCUITS } from '../data/motogpCircuits'
 import { MOTO2_CIRCUITS } from '../data/moto2Circuits'
 import { MOTO3_CIRCUITS } from '../data/moto3Circuits'
-import { SBK_CIRCUITS } from '../data/sbkCircuits'
 import CircuitCard from '../components/CircuitCard'
 import MotoCircuitCard from '../components/MotoCircuitCard'
 
-type SerieTab = 'f1' | 'motogp' | 'moto2' | 'moto3' | 'sbk'
+type SerieTab = 'f1' | 'motogp' | 'moto2' | 'moto3'
 
 const TABS: { key: SerieTab; label: string; accent: string }[] = [
   { key: 'f1', label: 'Formula 1', accent: '#ef4444' },
   { key: 'motogp', label: 'MotoGP', accent: '#FF5F1F' },
   { key: 'moto2', label: 'Moto2', accent: '#CCFF00' },
   { key: 'moto3', label: 'Moto3', accent: '#39FF14' },
-  { key: 'sbk', label: 'WorldSBK', accent: '#B026FF' },
 ]
 
 export default function Circuits() {
@@ -112,18 +110,6 @@ export default function Circuits() {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {MOTO3_CIRCUITS.map((circuit) => (
                 <MotoCircuitCard key={circuit.id} circuit={circuit} accentKleur="#39FF14" />
-              ))}
-            </div>
-          )
-        )}
-
-        {tab === 'sbk' && (
-          SBK_CIRCUITS.length === 0 ? (
-            <LegeState />
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {SBK_CIRCUITS.map((circuit) => (
-                <MotoCircuitCard key={circuit.id} circuit={circuit} accentKleur="#B026FF" />
               ))}
             </div>
           )

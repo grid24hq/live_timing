@@ -1,6 +1,6 @@
 import { Ruler, CornerDownRight, CalendarDays, Flag as FlagIcon, Timer, Zap, Users } from 'lucide-react'
 import type { F1Circuit } from '../types/circuit'
-import { flagEmoji } from '../lib/flag'
+import { flagSrc } from '../lib/flag'
 
 interface Props {
   circuit: F1Circuit
@@ -19,22 +19,24 @@ export default function CircuitCard({ circuit }: Props) {
         />
 
         {/* Vlag rechtsboven — donker chipje zodat het altijd contrasteert, ook tegen lichte tekeningen */}
-        <div className="absolute right-3 top-3 flex h-7 min-w-[2.5rem] items-center justify-center gap-1 rounded-md border border-white/15 bg-black/70 px-2 text-sm font-bold text-white shadow backdrop-blur-sm">
-          <span>{flagEmoji(circuit.countryCode)}</span>
+        <div className="absolute right-3 top-3 h-6 w-9 overflow-hidden rounded-md border border-white/15 shadow backdrop-blur-sm">
+          <img
+            src={flagSrc(circuit.countryCode)}
+            alt={circuit.countryCode}
+            className="h-full w-full object-cover"
+            onError={(e) => { e.currentTarget.style.visibility = 'hidden' }}
+          />
         </div>
+      </div>
 
-        {/* Naam + locatie overlay onderin, over de tekening */}
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 px-4 pb-3 pt-10"
-          style={{ background: 'linear-gradient(to top, rgba(5,6,8,0.92) 10%, transparent 100%)' }}
-        >
-          <h3 className="font-display text-lg font-black uppercase leading-tight text-white drop-shadow">
-            {circuit.kortenaam}
-          </h3>
-          <p className="font-mono text-xs font-medium text-gray-300">
-            {circuit.stad}, {circuit.land}
-          </p>
-        </div>
+      {/* Naam + locatie — onder de tekening, niet er overheen */}
+      <div className="border-b border-gray-900 bg-[#0b0d13] px-4 pb-3 pt-3">
+        <h3 className="font-display text-lg font-black uppercase leading-tight text-white">
+          {circuit.kortenaam}
+        </h3>
+        <p className="font-mono text-xs font-medium text-gray-400">
+          {circuit.stad}, {circuit.land}
+        </p>
       </div>
 
       {/* INHOUD */}
