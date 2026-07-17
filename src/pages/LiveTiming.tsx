@@ -54,14 +54,14 @@ export default function LiveTiming() {
   return (
     <div className="min-h-screen bg-void font-body text-text-primary">
       {/* LIVE TIMING */}
-      <section className="mx-auto max-w-[1360px] px-8 py-12">
+      <section className="mx-auto max-w-[1360px] px-3 py-6 sm:px-8 sm:py-12">
         <div className="overflow-hidden rounded-xl border border-line bg-panel">
-          <div className="flex border-b border-line bg-panel-raised">
+          <div className="flex overflow-x-auto border-b border-line bg-panel-raised">
             {(Object.keys(SERIES_LABEL) as Series[]).map((series) => (
               <button
                 key={series}
                 onClick={() => setSelectedSeries(series)}
-                className="border-b-2 px-6 py-4 font-display text-sm font-semibold tracking-wide transition-colors"
+                className="flex-shrink-0 border-b-2 px-4 py-4 font-display text-sm font-semibold tracking-wide transition-colors sm:px-6"
                 style={
                   selectedSeries === series
                     ? { borderColor: SERIES_HEX[series], color: SERIES_HEX[series] }
@@ -76,16 +76,16 @@ export default function LiveTiming() {
           <div className="p-4">
             {sessionId ? (
               /* STAP 4: HIER SPLITSEN WE DE LAYOUT COMPONENTEN */
-              <div className="flex w-full gap-4 transition-all duration-300">
+              <div className="flex w-full flex-col gap-4 transition-all duration-300 lg:flex-row">
                 
-                {/* DE LIVE TIMING TABEL: Krimpt naar 65% breedte als telemetrie openklapt */}
-                <div className={`transition-all duration-300 ${isTelemetryOpen ? 'w-2/3' : 'w-full'}`}>
+                {/* DE LIVE TIMING TABEL: Krimpt naar 65% breedte als telemetrie openklapt (alleen op grotere schermen) */}
+                <div className={`min-w-0 transition-all duration-300 ${isTelemetryOpen ? 'lg:w-2/3' : 'w-full'}`}>
                   <LiveTimingPanel sessionId={sessionId} klasse={KLASSE[selectedSeries]} />
                 </div>
 
-                {/* HET SCHUIPANEEL: Wordt hiernaast geladen zodra openklapt */}
+                {/* HET SCHUIPANEEL: staat op mobiel/tablet gewoon onder de tabel i.p.v. ernaast, zodat er geen horizontale overflow ontstaat */}
                 {isTelemetryOpen && (
-                  <div className="w-1/3 min-w-[420px] animate-fade-in">
+                  <div className="w-full animate-fade-in lg:w-1/3 lg:min-w-[420px]">
                     <LiveTelemetryPanel circuitSlug={actieveSessie?.circuit_slug} />
                   </div>
                 )}
