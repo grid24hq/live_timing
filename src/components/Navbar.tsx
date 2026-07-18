@@ -1,7 +1,10 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Timer, Calendar, Users, Trophy, MapPin, Menu, X } from 'lucide-react'
+import { Timer, Calendar, Users, Trophy, MapPin, Menu, X, LogOut, User as UserIcon } from 'lucide-react'
 import { getLiveSessies, getLiveTiming } from '../lib/raceApi'
+import { useAuthStore } from '../store/useAuthStore'
+import { signOut } from 'firebase/auth'
+import { auth } from '../lib/firebase'
 
 type SessieStatus = 'idle' | 'no_data' | 'live'
 
@@ -59,6 +62,7 @@ export default function Navbar() {
     live: { dot: 'bg-emerald-500', label: 'SESSIE LIVE' },
   }
   const status = STATUS_CONFIG[sessieStatus]
+  const user = useAuthStore((s) => s.user)
 
   // Handige functie om te kijken welke pagina nu actief is voor de oplichtende rode tekst
   const isActive = (path: string) => location.pathname === path
@@ -104,6 +108,40 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* ACCOUNT — desktop */}
+        <div className="hidden md:flex items-center gap-3 mr-4">
+          {user ? (
+            <>
+              <span className="flex items-center gap-1.5 font-mono text-xs text-gray-400">
+                <UserIcon className="h-4 w-4" />
+                {user.displayName ?? user.email}
+              </span>
+              <button
+                onClick={() => signOut(auth)}
+                className="flex items-center gap-1.5 rounded-lg border border-gray-800 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wide text-gray-400 transition-colors hover:border-red-500 hover:text-white"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Uitloggen
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="font-mono text-xs font-bold uppercase tracking-wide text-gray-400 hover:text-white"
+              >
+                Inloggen
+              </Link>
+              <Link
+                to="/register"
+                className="rounded-lg bg-red-500 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
+              >
+                Registreren
+              </Link>
+            </>
+          )}
+        </div>
+
         {/* LIVE BADGE RECHTS */}
         <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-950/40 px-3 py-2.5 font-mono text-xs font-bold tracking-wider shadow-lg sm:px-5">
           <span className={`h-2.5 w-2.5 rounded-full animate-pulse ${status.dot}`} />
@@ -141,6 +179,40 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+          </div>
+
+          {/* ACCOUNT — mobiel */}
+          <div className="mt-4 border-t border-gray-900 pt-4">
+            {user ? (
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 font-mono text-xs text-gray-400">
+                  <UserIcon className="h-4 w-4" />
+                  {user.displayName ?? user.email}
+                </span>
+                <button
+                  onClick={() => signOut(auth)}
+                  className="flex items-center gap-1.5 rounded-lg border border-gray-800 px-3 py-2 font-mono text-xs font-bold uppercase tracking-wide text-gray-400"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Uitloggen
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Link
+                  to="/login"
+                  className="flex-1 rounded-lg border border-gray-800 px-3 py-2.5 text-center font-mono text-xs font-bold uppercase tracking-wide text-gray-400"
+                >
+                  Inloggen
+                </Link>
+                <Link
+                  to="/register"
+                  className="flex-1 rounded-lg bg-red-500 px-3 py-2.5 text-center font-mono text-xs font-bold uppercase tracking-wide text-white"
+                >
+                  Registreren
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
