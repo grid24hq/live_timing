@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Timer, Calendar, Users, Trophy, MapPin, Menu, X, LogOut, User as UserIcon } from 'lucide-react'
+import { Timer, Calendar, Users, Trophy, MapPin, Menu, X, LogOut, User as UserIcon, Mail } from 'lucide-react'
 import { getLiveSessies, getLiveTiming } from '../lib/raceApi'
 import { useAuthStore } from '../store/useAuthStore'
 import { signOut } from 'firebase/auth'
@@ -73,6 +73,7 @@ export default function Navbar() {
     { path: '/standen', label: 'Standen', icon: <Trophy className="w-5 h-5" /> },
     { path: '/coureurs', label: 'Coureurs', icon: <Users className="w-5 h-5" /> },
     { path: '/circuits', label: 'Circuits', icon: <MapPin className="w-5 h-5" /> },
+    { path: '/contact', label: 'Contact', icon: <Mail className="w-5 h-5" /> },
   ]
 
   return (

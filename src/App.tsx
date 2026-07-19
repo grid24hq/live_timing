@@ -8,6 +8,7 @@ import Coureurs from './pages/Coureurs'
 import Circuits from './pages/Circuits'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import Contact from './pages/Contact'
 import RequireLiveTimingAccess from './components/RequireLiveTimingAccess'
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/circuits" element={<Circuits />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </>
   )
