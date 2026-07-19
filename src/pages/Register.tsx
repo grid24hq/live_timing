@@ -4,6 +4,8 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, firestore } from '../lib/firebase'
 import { stuurWelkomstmail } from '../lib/emailjs'
+import { loginMetGoogle } from '../lib/googleAuth'
+import GoogleIcon from '../components/GoogleIcon'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -12,6 +14,22 @@ export default function Register() {
   const [wachtwoord, setWachtwoord] = useState('')
   const [bezig, setBezig] = useState(false)
   const [foutmelding, setFoutmelding] = useState<string | null>(null)
+
+  async function handleGoogleRegister() {
+    setFoutmelding(null)
+    setBezig(true)
+    try {
+      await loginMetGoogle()
+      navigate('/live-timing')
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code ?? ''
+      if (code !== 'auth/popup-closed-by-user') {
+        setFoutmelding('Registreren met Google is niet gelukt. Probeer het opnieuw.')
+      }
+    } finally {
+      setBezig(false)
+    }
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -62,6 +80,22 @@ export default function Register() {
         </div>
 
         <form onSubmit={handleSubmit} className="rounded-xl border border-line bg-panel p-6 space-y-5">
+          <button
+            type="button"
+            onClick={handleGoogleRegister}
+            disabled={bezig}
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-line bg-panel-raised px-4 py-3 font-mono text-sm font-bold uppercase tracking-widest text-text-primary transition-colors hover:border-line-bright disabled:opacity-50"
+          >
+            <GoogleIcon />
+            Registreren met Google
+          </button>
+
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-line" />
+            <span className="font-mono text-[10px] uppercase tracking-widest text-text-secondary">of</span>
+            <div className="h-px flex-1 bg-line" />
+          </div>
+
           <Veld label="Gebruikersnaam" value={username} onChange={setUsername} type="text" autoComplete="username" required />
           <Veld label="E-mailadres" value={email} onChange={setEmail} type="email" autoComplete="email" required />
           <Veld label="Wachtwoord" value={wachtwoord} onChange={setWachtwoord} type="password" autoComplete="new-password" required />

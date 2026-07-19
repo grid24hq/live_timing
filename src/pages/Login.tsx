@@ -2,6 +2,8 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../lib/firebase'
+import { loginMetGoogle } from '../lib/googleAuth'
+import GoogleIcon from '../components/GoogleIcon'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -9,6 +11,23 @@ export default function Login() {
   const [wachtwoord, setWachtwoord] = useState('')
   const [bezig, setBezig] = useState(false)
   const [foutmelding, setFoutmelding] = useState<string | null>(null)
+
+  async function handleGoogleLogin() {
+    setFoutmelding(null)
+    setBezig(true)
+    try {
+      await loginMetGoogle()
+      navigate('/live-timing')
+    } catch (err: unknown) {
+      // Gebruiker die zelf de popup sluit is geen echte fout — stil negeren
+      const code = (err as { code?: string })?.code ?? ''
+      if (code !== 'auth/popup-closed-by-user') {
+        setFoutmelding('Inloggen met Google is niet gelukt. Probeer het opnieuw.')
+      }
+    } finally {
+      setBezig(false)
+    }
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -39,6 +58,22 @@ export default function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="rounded-xl border border-line bg-panel p-6 space-y-5">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={bezig}
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-line bg-panel-raised px-4 py-3 font-mono text-sm font-bold uppercase tracking-widest text-text-primary transition-colors hover:border-line-bright disabled:opacity-50"
+          >
+            <GoogleIcon />
+            Inloggen met Google
+          </button>
+
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-line" />
+            <span className="font-mono text-[10px] uppercase tracking-widest text-text-secondary">of</span>
+            <div className="h-px flex-1 bg-line" />
+          </div>
+
           <label className="block">
             <span className="mb-1.5 block font-mono text-[11px] font-bold uppercase tracking-widest text-text-secondary">
               E-mailadres
